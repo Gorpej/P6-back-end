@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => {
@@ -17,6 +17,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+    //trouver l'utilisateur de la base donnée findOne est une fonction asynchrone
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user) {

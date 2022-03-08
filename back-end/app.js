@@ -1,11 +1,10 @@
 // importe le pack express
 const express = require('express');
-// const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
-const Thing = require('./models/Thing');
+const path = require('path');
 
 const userRoutes = require('./routes/user');
+const saucesRoutes = require('./routes/sauces');
 
 mongoose.connect('mongodb+srv://TrainingDevOC:upYYdgfYA8EWDMIT@cluster0.cxtyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
   {
@@ -17,9 +16,6 @@ mongoose.connect('mongodb+srv://TrainingDevOC:upYYdgfYA8EWDMIT@cluster0.cxtyq.mo
 
 // créer une application express
 const app = express();
-// écoute ce que l'on recoit avec la methode get à la route indiquer
-// app.get(./)
-
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -28,24 +24,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(bodyParser.json());
+app.use(express.json());
 
-// app.post('/api/auth/signup', (req, res, next) => {
-//   const thing = new Thing({
-//     ...req.body
-//   });
-//   thing.save()
-//     .then(() => res.status(201).json({ message: 'Objet enregistré!' }))
-//     .catch(error => res.status(400).json({ error }));
-// });
+app.use('/api/auth', userRoutes);
+app.use('/api/sauces', saucesRoutes);
 
-// app.use('/api/auth/signup', (req, res, next) => {
-//   Thing.find()
-//     .then(things => res.status(200).json(things))
-//     .catch(error => res.status(400).json({ error }));
-// });
-
-app.use('./api/auth', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //exporter l'application pour y acceder depuis les autres fichiers
 module.exports = app;

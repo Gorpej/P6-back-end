@@ -1,4 +1,5 @@
-const Sauce = require('../models/sauces');
+const Sauce = require('../models/Sauces');
+
 const fs = require('fs');
 
 exports.createSauce = (req, res, next) => {
@@ -19,11 +20,8 @@ exports.getAllSauces = (req, res, next) => {
             res.status(200).json(sauces);
         })
         .catch((error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-        );
+            res.status(400).json({ error: error });
+        });
 };
 
 exports.getOneSauce = (req, res, next) => {
@@ -32,11 +30,8 @@ exports.getOneSauce = (req, res, next) => {
             res.status(200).json(sauce);
         })
         .catch((error) => {
-            res.status(404).json({
-                error: error
-            });
-        }
-        );
+            res.status(404).json({ error: error });
+        });
 };
 
 exports.modifySauce = (req, res, next) => {
@@ -64,19 +59,23 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 exports.likeSauce = (req, res, next) => {
-    let like = req.body.like;
-    if (like = 1){
-        console.log('vous avez aimé la sauce ! ')
-    } else if( like = -1){
-        console.log('vous n"avez pas  aimé la sauce ! ')
-
+    const like = req.body.like;
+    switch (like) {
+        case 1:
+            Sauce.updateOne({ _id: req.params.id }, { $push: { usersLiked: req.body.userId } }, { $inc: { like: +1 } })
+                .then(() => res.status(201).json({ message: 'Like enregistré' }))
+                .catch(error => res.status(400).json({ error }));
+            break;
+        case -1:
+            Sauce.updateOne({ _id: req.params.id }, { $pull: { usersDisliked: req.body.userId } }, { $inc: { dislike: -1 } })
+                .then(() => res.status(201).json({ message: 'Dislike enregistré' }))
+                .catch(error => res.status(400).json({ error }));
+            break;
+        case 0:
+            Sauce.findOne({ _id: req.params.id })
+                .then(() => res.status(201).json({ message: 'Annuler le like ou dislike' }))
+                .catch(error => res.status(400).json({ error }));
+            break;
+        default: 
     }
-
 };
-
-// exports.dislikeSauce = (req, res, next) => {
-//     const sauceObject = req.file ?
-//         {}
-//             .then(() => res.status(200).json({ message: 'Dislike !' }))
-//             .catch(error => res.status(400).json({ error }))
-// };

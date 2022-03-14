@@ -1,3 +1,4 @@
+//importation du http de node js
 const http = require('http');
 const app = require('./app');
 
@@ -14,7 +15,6 @@ const normalizePort = val => {
   return false;
 };
 
-//selection du port
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
@@ -48,4 +48,5 @@ server.on('listening', () => {
   console.log('Listening on ' + bind);
 });
 
+// Écoute le port selectionné
 server.listen(port);

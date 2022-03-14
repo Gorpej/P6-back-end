@@ -5,8 +5,9 @@ const path = require('path');
 
 const userRoutes = require('./routes/user');
 const saucesRoutes = require('./routes/sauces');
+require('dotenv').config();
 
-mongoose.connect('mongodb+srv://TrainingDevOC:upYYdgfYA8EWDMIT@cluster0.cxtyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+mongoose.connect(process.env.DATABASE,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
